@@ -5,6 +5,7 @@ import { useRef } from "react";
 import {
   motion,
   useMotionValue,
+  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -20,27 +21,29 @@ const sensors = [
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
 
-  // Mouse-tracked 3D parallax
+  // Mouse-tracked 3D parallax — pinned to 0 when prefers-reduced-motion is set
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const cfg = { stiffness: 80, damping: 18, mass: 0.6 };
   const sx = useSpring(mx, cfg);
   const sy = useSpring(my, cfg);
 
-  const rotY = useTransform(sx, [0, 1], [-5, 5]);
-  const rotX = useTransform(sy, [0, 1], [5, -5]);
-  const tx = useTransform(sx, [0, 1], [-12, 12]);
-  const ty = useTransform(sy, [0, 1], [-8, 8]);
-  const txBg = useTransform(sx, [0, 1], [20, -20]);
-  const tyBg = useTransform(sy, [0, 1], [12, -12]);
+  const rotY = useTransform(sx, [0, 1], reduce ? [0, 0] : [-5, 5]);
+  const rotX = useTransform(sy, [0, 1], reduce ? [0, 0] : [5, -5]);
+  const tx = useTransform(sx, [0, 1], reduce ? [0, 0] : [-12, 12]);
+  const ty = useTransform(sy, [0, 1], reduce ? [0, 0] : [-8, 8]);
+  const txBg = useTransform(sx, [0, 1], reduce ? [0, 0] : [20, -20]);
+  const tyBg = useTransform(sy, [0, 1], reduce ? [0, 0] : [12, -12]);
 
-  // Scroll parallax
+  // Scroll parallax — collapsed under reduced motion
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const scrollY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const scrollOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scrollY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -80]);
+  const scrollOpacity = useTransform(scrollYProgress, [0, 0.8], reduce ? [1, 1] : [1, 0]);
 
   function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (reduce) return;
     const r = ref.current?.getBoundingClientRect();
     if (!r) return;
     mx.set((e.clientX - r.left) / r.width);
@@ -92,7 +95,7 @@ export default function Hero() {
               </span>
             </motion.div>
 
-            <h1 className="display-xl text-[clamp(2.4rem,4.4vw,4.2rem)] text-ink mt-7 leading-[1.0]">
+            <h1 className="display-xl text-[clamp(2rem,4.4vw,4.2rem)] text-ink mt-7 leading-[1.0]">
               {["A vertically", "integrated", null, "platform."].map((line, i) =>
                 line === null ? (
                   <span key={i} className="block overflow-hidden">
@@ -100,7 +103,7 @@ export default function Hero() {
                       initial={{ y: "110%" }}
                       animate={{ y: "0%" }}
                       transition={{ duration: 0.95, delay: 0.3 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                      className="block display-it text-rd"
+                      className="block display-it text-rd whitespace-nowrap"
                     >
                       vehicle intelligence
                     </motion.span>
@@ -136,16 +139,16 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 1.0 }}
               className="mt-9 flex flex-wrap gap-3"
             >
-              <Magnetic strength={0.3}>
+              <Magnetic strength={0.25}>
                 <a href="#contact" className="btn btn-primary">
                   Request a strategic discussion
                   <span className="arrow" aria-hidden>→</span>
                 </a>
               </Magnetic>
-              <Magnetic strength={0.2}>
+              <Magnetic strength={0.25}>
                 <a href="#hardware" className="btn btn-ghost">
-                  Download brochure
-                  <span aria-hidden>↓</span>
+                  See hardware
+                  <span className="arrow" aria-hidden>→</span>
                 </a>
               </Magnetic>
             </motion.div>
@@ -230,7 +233,7 @@ export default function Hero() {
                 </div>
               </motion.div>
 
-              {/* Floating sensor callouts */}
+              {/* Floating sensor callouts — desktop & tablet only */}
               <div
                 className="absolute inset-0 pointer-events-none hidden md:block"
                 style={{ transform: "translateZ(60px)" }}
@@ -248,6 +251,32 @@ export default function Hero() {
                 ))}
               </div>
             </motion.div>
+
+            {/* Mobile sensor legend — compact stacked list shown when floating callouts are hidden */}
+            <div className="md:hidden mt-7 grid grid-cols-2 gap-2.5" aria-label="Sensor coverage">
+              {sensors.map((s, i) => (
+                <motion.div
+                  key={s.label}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.55 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-start gap-2.5 rounded-lg border border-rule bg-paper/60 backdrop-blur-md px-3 py-2.5"
+                >
+                  <span className="relative w-2 h-2 mt-1.5 shrink-0" aria-hidden>
+                    <span className="absolute inset-0 rounded-full bg-rd shadow-[0_0_6px_rgba(220,34,51,0.6)]" />
+                    <span className="absolute -inset-1 rounded-full border border-rd/40" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="font-mono text-[9px] tracking-[0.18em] uppercase text-rd leading-none">
+                      {s.code}
+                    </div>
+                    <div className="text-[12px] text-ink font-medium leading-tight mt-1">
+                      {s.label}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -261,7 +290,7 @@ export default function Hero() {
           <span>
             Road Devil<span className="text-rd">®</span> · UK trade mark No.&nbsp;UK00004311142
           </span>
-          <span className="font-mono text-[10.5px] tracking-[0.18em] uppercase">
+          <span className="font-mono text-[9.5px] sm:text-[10.5px] tracking-[0.12em] sm:tracking-[0.18em] uppercase">
             Vehicle Camera Systems · Software Platforms · Licensing
           </span>
         </motion.div>

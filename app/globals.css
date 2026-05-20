@@ -165,7 +165,7 @@ html.theme-ready * {
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
 
 html, body {
   background: var(--paper);
@@ -198,6 +198,9 @@ html, body {
   font-weight: 500;
   font-variation-settings: "wdth" 95;
   letter-spacing: -0.02em;
+  /* Optical alignment: pull the slanted left bearing flush with surrounding roman.
+     Negligible inside a line; corrects the inset when the italic span begins a line. */
+  margin-left: -0.02em;
 }
 
 .eyebrow {

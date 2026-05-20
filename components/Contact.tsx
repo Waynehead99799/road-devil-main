@@ -3,6 +3,7 @@
 import {
   motion,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
@@ -12,18 +13,20 @@ import Magnetic from "./ui/Magnetic";
 export default function Contact() {
   const [sent, setSent] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
 
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const cfg = { stiffness: 60, damping: 18 };
   const sx = useSpring(mx, cfg);
   const sy = useSpring(my, cfg);
-  const tx = useTransform(sx, [0, 1], [40, -40]);
-  const ty = useTransform(sy, [0, 1], [30, -30]);
-  const tx2 = useTransform(sx, [0, 1], [-30, 30]);
-  const ty2 = useTransform(sy, [0, 1], [-20, 20]);
+  const tx = useTransform(sx, [0, 1], reduce ? [0, 0] : [40, -40]);
+  const ty = useTransform(sy, [0, 1], reduce ? [0, 0] : [30, -30]);
+  const tx2 = useTransform(sx, [0, 1], reduce ? [0, 0] : [-30, 30]);
+  const ty2 = useTransform(sy, [0, 1], reduce ? [0, 0] : [-20, 20]);
 
   function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (reduce) return;
     const r = ref.current?.getBoundingClientRect();
     if (!r) return;
     mx.set((e.clientX - r.left) / r.width);
@@ -42,16 +45,17 @@ export default function Contact() {
       onMouseLeave={onLeave}
       className="section-dark relative py-28 lg:py-36 overflow-hidden"
     >
-      {/* Atmospheric aurora */}
+      {/* Atmospheric aurora — opacities dialled down + blur dialled up in dark mode
+          so the brighter --rd token doesn't over-saturate the always-dark canvas */}
       <motion.div
         aria-hidden
         style={{ x: tx, y: ty }}
-        className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-rd/25 blur-[140px] pointer-events-none"
+        className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-rd/25 dark:bg-rd/15 blur-[140px] dark:blur-[180px] pointer-events-none"
       />
       <motion.div
         aria-hidden
         style={{ x: tx2, y: ty2 }}
-        className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-rd/10 blur-[140px] pointer-events-none"
+        className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-rd/10 dark:bg-rd/[0.06] blur-[140px] dark:blur-[180px] pointer-events-none"
       />
 
       {/* Fine grid */}

@@ -57,14 +57,21 @@ export default function Proof() {
               transition={{ duration: 0.7, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
               <Tilt max={6} className="h-full">
-                <div className="card card-hover p-7 h-full group relative overflow-hidden">
-                  {/* Hover gradient sweep */}
+                <div
+                  className="card card-hover p-7 h-full group relative overflow-hidden"
+                  onMouseMove={(e) => {
+                    const r = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty("--x", `${e.clientX - r.left}px`);
+                    e.currentTarget.style.setProperty("--y", `${e.clientY - r.top}px`);
+                  }}
+                >
+                  {/* Hover gradient sweep — tracks cursor via --x / --y vars set on mousemove */}
                   <div
                     aria-hidden
                     className="absolute -inset-px rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{
                       background:
-                        "radial-gradient(360px circle at var(--x,50%) var(--y,0%), rgba(220,34,51,0.08), transparent 60%)",
+                        "radial-gradient(360px circle at var(--x, 50%) var(--y, 0%), rgba(220,34,51,0.10), transparent 60%)",
                     }}
                   />
 

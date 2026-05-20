@@ -12,6 +12,8 @@ const layers = [
     body: "Proprietary device architecture engineered for commercial vehicle deployment. Maintains architectural control while supporting integration flexibility.",
     color: "#DC2233",
     bg: "linear-gradient(135deg, #ffffff, #f6f5f1)",
+    fg: "#0a0a09",
+    fgMute: "#6e6d65",
     isDark: false,
   },
   {
@@ -20,6 +22,8 @@ const layers = [
     body: "Structured data architecture enabling controlled ingestion into telematics systems, OEM software environments and insurance analytics platforms.",
     color: "#DC2233",
     bg: "linear-gradient(135deg, #1f1f1c, #0a0a09)",
+    fg: "#f4f3ee",
+    fgMute: "rgba(244,243,238,0.55)",
     isDark: true,
   },
   {
@@ -28,6 +32,8 @@ const layers = [
     body: "Embedded inference models operating directly on-device, reducing cloud dependency and supporting scalable fleet deployment.",
     color: "#ffffff",
     bg: "linear-gradient(135deg, #DC2233, #A8141F)",
+    fg: "#ffffff",
+    fgMute: "rgba(255,255,255,0.7)",
     isDark: true,
   },
 ];
@@ -110,13 +116,13 @@ export default function Stack() {
                       }`}
                       style={{ background: l.bg }}
                     >
-                      {/* Inner content */}
+                      {/* Inner content — colours pinned to the tile's intrinsic palette
+                          (l.fg / l.fgMute) so they don't invert when the page theme flips. */}
                       <div className="absolute inset-0 p-6 lg:p-7 flex flex-col justify-between">
                         <div className="flex items-center justify-between">
                           <span
-                            className={`font-mono text-[10.5px] tracking-[0.22em] uppercase ${
-                              l.isDark ? "text-paper/55" : "text-mute"
-                            }`}
+                            className="font-mono text-[10.5px] tracking-[0.22em] uppercase"
+                            style={{ color: l.fgMute }}
                           >
                             Layer {l.code}
                           </span>
@@ -136,9 +142,8 @@ export default function Stack() {
 
                         <div>
                           <div
-                            className={`display text-[1.25rem] lg:text-[1.4rem] leading-tight ${
-                              l.isDark ? "text-paper" : "text-ink"
-                            }`}
+                            className="display text-[1.25rem] lg:text-[1.4rem] leading-tight"
+                            style={{ color: l.fg }}
                           >
                             {l.name}
                           </div>
@@ -147,9 +152,10 @@ export default function Stack() {
                               initial={{ opacity: 0, y: 4 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.4, delay: 0.15 }}
-                              className={`mt-2 font-mono text-[10px] tracking-[0.2em] uppercase ${
-                                l.isDark ? "text-rd" : "text-rd"
-                              }`}
+                              className="mt-2 font-mono text-[10px] tracking-[0.2em] uppercase"
+                              style={{
+                                color: l.code === "L3" ? "#ffffff" : "#DC2233",
+                              }}
                             >
                               ● Active
                             </motion.div>

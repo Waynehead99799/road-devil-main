@@ -8,7 +8,6 @@ import ThemeToggle from "./ui/ThemeToggle";
 
 const links = [
   { label: "Stack", href: "#stack" },
-  { label: "Technology", href: "#technology" },
   { label: "Console", href: "#console" },
   { label: "Hardware", href: "#hardware" },
   { label: "Deployment", href: "#deployment" },
@@ -131,6 +130,17 @@ export default function Nav() {
                   <span className="text-rd opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                 </motion.a>
               ))}
+              <motion.a
+                href="#contact"
+                onClick={() => setOpen(false)}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: links.length * 0.05 + 0.05 }}
+                className="mt-5 btn btn-primary justify-center w-full"
+              >
+                Request a strategic discussion
+                <span className="arrow" aria-hidden>→</span>
+              </motion.a>
             </div>
           </motion.div>
         )}

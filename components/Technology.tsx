@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
 import SectionHead from "./SectionHead";
@@ -31,12 +31,17 @@ const modules = [
 
 export default function Technology() {
   const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const rotX = useTransform(scrollYProgress, [0, 0.5, 1], [18, 0, -10]);
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const rotX = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    reduce ? [0, 0, 0] : [18, 0, -10]
+  );
+  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [40, -40]);
 
   return (
     <section id="technology" className="relative py-24 lg:py-32 overflow-hidden">

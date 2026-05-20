@@ -2,7 +2,6 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import Proof from "@/components/Proof";
 import Stack from "@/components/Stack";
-import Technology from "@/components/Technology";
 import Console from "@/components/Console";
 import Hardware from "@/components/Hardware";
 import Deployment from "@/components/Deployment";
@@ -20,7 +19,6 @@ export default function Page() {
         <Hero />
         <Proof />
         <Stack />
-        <Technology />
         <Console />
         <Hardware />
         <Deployment />
