@@ -2,22 +2,24 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  darkMode: ["class", '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
-        paper: "#FAFAF7",
-        paper2: "#F3F1EA",
-        paper3: "#E8E5DC",
-        ink: "#0E0E0C",
-        ink2: "#2A2A26",
-        mute: "#74746C",
-        mute2: "#AAA89F",
-        rule: "#E1DED4",
-        rule2: "#C9C6BB",
-        rd: "#DC2233",
-        rd2: "#A8141F",
-        rdsoft: "#FCE6E9",
-        good: "#1E7A45",
+        paper: "rgb(var(--paper-rgb) / <alpha-value>)",
+        paper2: "rgb(var(--paper-2-rgb) / <alpha-value>)",
+        paper3: "rgb(var(--paper-3-rgb) / <alpha-value>)",
+        ink: "rgb(var(--ink-rgb) / <alpha-value>)",
+        ink2: "rgb(var(--ink-2-rgb) / <alpha-value>)",
+        mute: "rgb(var(--mute-rgb) / <alpha-value>)",
+        mute2: "rgb(var(--mute-2-rgb) / <alpha-value>)",
+        rule: "rgb(var(--rule-rgb) / <alpha-value>)",
+        rule2: "rgb(var(--rule-2-rgb) / <alpha-value>)",
+        rd: "rgb(var(--rd-rgb) / <alpha-value>)",
+        rd2: "rgb(var(--rd-2-rgb) / <alpha-value>)",
+        rdsoft: "rgb(var(--rd-soft-rgb) / <alpha-value>)",
+        good: "rgb(var(--good-rgb) / <alpha-value>)",
+        surface: "rgb(var(--surface-rgb) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui"],

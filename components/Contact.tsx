@@ -40,7 +40,7 @@ export default function Contact() {
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      className="relative py-28 lg:py-36 bg-ink text-paper overflow-hidden"
+      className="section-dark relative py-28 lg:py-36 overflow-hidden"
     >
       {/* Atmospheric aurora */}
       <motion.div

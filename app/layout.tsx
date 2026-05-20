@@ -30,9 +30,27 @@ export const metadata: Metadata = {
   },
 };
 
+const themeInitScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem('theme');
+    var theme = stored === 'dark' || stored === 'light'
+      ? stored
+      : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {}
+  requestAnimationFrame(function () {
+    document.documentElement.classList.add('theme-ready');
+  });
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );

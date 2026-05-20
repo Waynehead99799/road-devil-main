@@ -3,6 +3,23 @@
 @tailwind utilities;
 
 :root {
+  /* Channel-format tokens (for Tailwind alpha support: rgb(var(--x-rgb) / 0.5)) */
+  --paper-rgb: 246 245 241;
+  --paper-2-rgb: 236 235 229;
+  --paper-3-rgb: 224 221 211;
+  --ink-rgb: 10 10 9;
+  --ink-2-rgb: 31 31 28;
+  --ink-3-rgb: 58 58 53;
+  --mute-rgb: 110 109 101;
+  --mute-2-rgb: 165 163 154;
+  --rule-rgb: 217 214 204;
+  --rule-2-rgb: 193 189 177;
+  --rd-rgb: 220 34 51;
+  --rd-2-rgb: 168 20 31;
+  --rd-soft-rgb: 252 230 233;
+  --good-rgb: 30 122 69;
+  --surface-rgb: 255 255 255;
+
   /* Paper — refined cool-warm neutrals */
   --paper: #f6f5f1;
   --paper-2: #ecebe5;
@@ -19,6 +36,9 @@
   --rd: #DC2233;
   --rd-2: #A8141F;
   --rd-soft: #FCE6E9;
+
+  /* Surface — for cards/glass; sits above the page bg */
+  --surface: #ffffff;
 
   /* Motion */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -39,6 +59,108 @@
   --shadow-red:
     0 12px 32px -12px rgba(220, 34, 51, 0.40),
     0 24px 64px -24px rgba(220, 34, 51, 0.28);
+}
+
+/* === Dark theme === */
+[data-theme="dark"] {
+  --paper-rgb: 10 10 9;
+  --paper-2-rgb: 22 22 20;
+  --paper-3-rgb: 31 31 28;
+  --ink-rgb: 244 243 238;
+  --ink-2-rgb: 216 214 205;
+  --ink-3-rgb: 176 174 163;
+  --mute-rgb: 138 136 126;
+  --mute-2-rgb: 86 85 78;
+  --rule-rgb: 42 42 38;
+  --rule-2-rgb: 58 58 53;
+  --rd-rgb: 239 68 86;
+  --rd-2-rgb: 220 34 51;
+  --rd-soft-rgb: 58 20 25;
+  --good-rgb: 52 184 102;
+  --surface-rgb: 30 30 27;
+
+  --paper: #0a0a09;
+  --paper-2: #161614;
+  --paper-3: #1f1f1c;
+  --ink: #f4f3ee;
+  --ink-2: #d8d6cd;
+  --ink-3: #b0aea3;
+  --mute: #8a887e;
+  --mute-2: #56554e;
+  --rule: #2a2a26;
+  --rule-2: #3a3a35;
+
+  --rd: #ef4456;
+  --rd-2: #DC2233;
+  --rd-soft: #3a1419;
+
+  --surface: #1e1e1b;
+
+  /* Shadows tuned for dark — deeper, more transparent */
+  --shadow-1:
+    0 1px 2px rgba(0, 0, 0, 0.30),
+    0 4px 8px -4px rgba(0, 0, 0, 0.40);
+  --shadow-2:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 12px 24px -12px rgba(0, 0, 0, 0.55),
+    0 24px 48px -24px rgba(0, 0, 0, 0.50);
+  --shadow-3:
+    0 2px 4px rgba(0, 0, 0, 0.30),
+    0 24px 48px -16px rgba(0, 0, 0, 0.60),
+    0 48px 96px -32px rgba(0, 0, 0, 0.60);
+  --shadow-red:
+    0 12px 32px -12px rgba(239, 68, 86, 0.45),
+    0 24px 64px -24px rgba(239, 68, 86, 0.32);
+
+  color-scheme: dark;
+}
+
+/* System preference fallback — only when no manual selection has been made */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --paper-rgb: 10 10 9;
+    --paper-2-rgb: 22 22 20;
+    --paper-3-rgb: 31 31 28;
+    --ink-rgb: 244 243 238;
+    --ink-2-rgb: 216 214 205;
+    --ink-3-rgb: 176 174 163;
+    --mute-rgb: 138 136 126;
+    --mute-2-rgb: 86 85 78;
+    --rule-rgb: 42 42 38;
+    --rule-2-rgb: 58 58 53;
+    --rd-rgb: 239 68 86;
+    --rd-2-rgb: 220 34 51;
+    --rd-soft-rgb: 58 20 25;
+    --good-rgb: 52 184 102;
+    --surface-rgb: 30 30 27;
+
+    --paper: #0a0a09;
+    --paper-2: #161614;
+    --paper-3: #1f1f1c;
+    --ink: #f4f3ee;
+    --ink-2: #d8d6cd;
+    --ink-3: #b0aea3;
+    --mute: #8a887e;
+    --mute-2: #56554e;
+    --rule: #2a2a26;
+    --rule-2: #3a3a35;
+    --rd: #ef4456;
+    --rd-2: #DC2233;
+    --rd-soft: #3a1419;
+    --surface: #1e1e1b;
+
+    color-scheme: dark;
+  }
+}
+
+/* Theme transition — only after first paint to avoid initial-load animation */
+html.theme-ready,
+html.theme-ready body,
+html.theme-ready * {
+  transition:
+    background-color 280ms var(--ease),
+    border-color 280ms var(--ease),
+    color 280ms var(--ease);
 }
 
 * { box-sizing: border-box; }
@@ -122,7 +244,7 @@ html, body {
 .btn-ghost {
   color: var(--ink);
   border: 1px solid var(--rule-2);
-  background: rgba(255,255,255,0.4);
+  background: rgb(var(--surface-rgb) / 0.4);
   backdrop-filter: blur(8px);
 }
 .btn-ghost:hover { border-color: var(--ink); background: var(--paper-2); transform: translateY(-1px); }
@@ -132,7 +254,7 @@ html, body {
 /* === Cards === */
 .card {
   position: relative;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgb(var(--surface-rgb) / 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--rule);
@@ -153,12 +275,47 @@ html, body {
   box-shadow: var(--shadow-red);
 }
 
+/* card-dark is always visually dark — lock its text tokens to the light palette
+   so children using text-paper / text-paper-XX / var(--mute) stay readable in dark mode. */
+[data-theme="dark"] .card-dark {
+  --paper-rgb: 246 245 241;
+  --paper-2-rgb: 236 235 229;
+  --paper-3-rgb: 224 221 211;
+  --mute-rgb: 165 163 154;
+  --paper: #f4f3ee;
+  --paper-2: #ecebe5;
+  --mute: #a5a39a;
+  color: #f4f3ee;
+}
+
+/* === Always-dark section ===
+   Use for sections designed as a permanent dark canvas (Contact, Footer, device frames).
+   Background is locked dark in both themes. Inside, the paper/mute palette is pinned to
+   the LIGHT values so child Tailwind classes like text-paper, text-paper/60, border-paper/10
+   and bg-paper/8 keep rendering as light-on-dark instead of inverting. */
+.section-dark {
+  background: #0a0a09;
+  color: #f4f3ee;
+  --paper-rgb: 246 245 241;
+  --paper-2-rgb: 236 235 229;
+  --paper-3-rgb: 224 221 211;
+  --mute-rgb: 165 163 154;
+  --mute-2-rgb: 110 109 101;
+  --paper: #f4f3ee;
+  --paper-2: #ecebe5;
+  --paper-3: #e0ddd3;
+  --mute: #a5a39a;
+  --mute-2: #6e6d65;
+  --ink-rgb: 10 10 9;
+  --ink: #0a0a09;
+}
+
 /* === Glass panel === */
 .glass {
-  background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.3) 100%);
+  background: linear-gradient(180deg, rgb(var(--surface-rgb) / 0.6) 0%, rgb(var(--surface-rgb) / 0.3) 100%);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255,255,255,0.55);
+  border: 1px solid rgb(var(--surface-rgb) / 0.55);
   box-shadow: var(--shadow-2);
 }
 .glass-dark {
@@ -207,14 +364,14 @@ html, body {
 /* === Grid backgrounds === */
 .bg-grid-hero {
   background-image:
-    linear-gradient(rgba(10, 10, 9, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(10, 10, 9, 0.06) 1px, transparent 1px);
+    linear-gradient(rgb(var(--ink-rgb) / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.06) 1px, transparent 1px);
   background-size: 80px 80px;
 }
 .bg-grid-fine {
   background-image:
-    linear-gradient(rgba(10, 10, 9, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(10, 10, 9, 0.04) 1px, transparent 1px);
+    linear-gradient(rgb(var(--ink-rgb) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ink-rgb) / 0.04) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 .bg-grid-perspective {
@@ -308,6 +465,15 @@ html, body {
   outline: 2px solid var(--rd);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* Form fields use their own focus treatment (border-bottom color shift),
+   so the global rectangular ring would only add noise on top. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.field:focus-visible {
+  outline: none;
 }
 
 /* === Scrollbar === */

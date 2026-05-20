@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import Magnetic from "./ui/Magnetic";
+import ThemeToggle from "./ui/ThemeToggle";
 
 const links = [
   { label: "Stack", href: "#stack" },
@@ -77,6 +78,7 @@ export default function Nav() {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="flex items-center gap-3"
           >
+            <ThemeToggle />
             <Magnetic strength={0.25} className="hidden md:inline-block">
               <a href="#contact" className="btn btn-primary !py-2.5 !px-5 !text-[13px]">
                 Request discussion

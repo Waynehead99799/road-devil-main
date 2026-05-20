@@ -116,7 +116,7 @@ export default function Console() {
                 alt="Multi-channel video review — main, in-cab and side cameras"
                 url="rdhub / event-review"
                 label="Event Review"
-                aspect="aspect-[4/3]"
+                aspect="aspect-[16/9]"
               />
             </motion.div>
 
@@ -131,10 +131,10 @@ export default function Console() {
             >
               <BrowserScreen
                 src="/console-driver.png"
-                alt="Driver behaviour scoring — harsh events, score, journey stats"
-                url="rdhub / driver-insights"
-                label="Driver Insights"
-                aspect="aspect-[4/3]"
+                alt="Live fleet tracking — 3D map view with vehicle markers"
+                url="rdhub / live-map"
+                label="Live Tracking"
+                aspect="aspect-[16/9]"
               />
             </motion.div>
 
@@ -233,7 +233,7 @@ function BrowserScreen({
   priority?: boolean;
 }) {
   return (
-    <div className="relative h-full rounded-2xl overflow-hidden border border-rule2 shadow-soft3 bg-ink group">
+    <div className="section-dark relative h-full rounded-2xl overflow-hidden border border-rule2 shadow-soft3 group">
       {/* Chrome bar */}
       <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-b from-[#1a1a17] to-[#0e0e0c] border-b border-paper/8">
         <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
@@ -252,15 +252,15 @@ function BrowserScreen({
         </span>
       </div>
 
-      {/* Screenshot */}
-      <div className={`relative w-full ${aspect}`}>
+      {/* Screenshot — object-contain so any aspect screenshot fits without cropping */}
+      <div className={`relative w-full ${aspect} bg-[#0e0e0c]`}>
         <Image
           src={src}
           alt={alt}
           fill
           priority={priority}
           sizes="(max-width: 1024px) 100vw, 60vw"
-          className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.015]"
+          className="object-contain object-center transition-transform duration-700 group-hover:scale-[1.015]"
         />
 
         {/* Reflective shine */}

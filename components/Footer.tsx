@@ -14,7 +14,7 @@ export default function Footer() {
   const rotX = useTransform(scrollYProgress, [0, 1], [12, 0]);
 
   return (
-    <footer className="bg-ink text-paper relative overflow-hidden">
+    <footer className="section-dark relative overflow-hidden">
       {/* Top hairline glow */}
       <div
         aria-hidden
