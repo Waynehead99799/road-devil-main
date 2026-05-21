@@ -1,14 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, ReactNode } from "react";
+import { useEffect, useState } from "react";
 import {
+  AnimatePresence,
   motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
+  useReducedMotion,
 } from "motion/react";
 import SectionHead from "./SectionHead";
+
+type Screen = {
+  code: string;
+  label: string;
+  src: string;
+  alt: string;
+  body: string;
+};
+
+const screens: Screen[] = [
+  {
+    code: "01",
+    label: "Operational overview",
+    src: "/detail-1.png",
+    alt: "rdHub overview — welcome panel, KPI cards and live fleet map",
+    body: "Welcome panel, KPI surfaces, and a live fleet map — the operator's first screen on shift. Devices online, organisations under management, miles protected and hours driven, all in one view.",
+  },
+  {
+    code: "02",
+    label: "Multi-channel event review",
+    src: "/main.png",
+    alt: "Multi-channel video review — six camera channels with accelerometer trace",
+    body: "Six camera channels per event paired with accelerometer trace and incident notes. Evidence-grade composition for claims workflows and behavioural review.",
+  },
+  {
+    code: "03",
+    label: "Behavioural analytics",
+    src: "/detail-2.png",
+    alt: "Driver analytics — hours per day, harsh events, score and journey metrics",
+    body: "Hours per day, harsh-event clusters, safety score and journey-level statistics — structured behavioural outputs keyed to risk patterns insurers actually use.",
+  },
+];
 
 const features = [
   { code: "F.01", label: "Real-time fleet map" },
@@ -18,35 +49,37 @@ const features = [
   { code: "F.05", label: "Insurer-grade exports" },
 ];
 
-const stats = [
+const stats: [string, string][] = [
   ["6+", "Camera channels"],
   ["<1s", "Real-time refresh"],
   ["24/7", "Live monitoring"],
   ["EU", "Multi-region map"],
 ];
 
+const AUTO_ADVANCE_MS = 6500;
+
 export default function Console() {
-  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [cycleKey, setCycleKey] = useState(0);
 
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const cfg = { stiffness: 70, damping: 18, mass: 0.6 };
-  const sx = useSpring(mx, cfg);
-  const sy = useSpring(my, cfg);
+  useEffect(() => {
+    if (reduce || paused) return;
+    const t = setTimeout(() => {
+      setActive((a) => (a + 1) % screens.length);
+      setCycleKey((k) => k + 1);
+    }, AUTO_ADVANCE_MS);
+    return () => clearTimeout(t);
+  }, [reduce, paused, active]);
 
-  const rotY = useTransform(sx, [0, 1], [-4, 4]);
-  const rotX = useTransform(sy, [0, 1], [3, -3]);
-
-  function onMove(e: React.MouseEvent<HTMLDivElement>) {
-    const r = ref.current?.getBoundingClientRect();
-    if (!r) return;
-    mx.set((e.clientX - r.left) / r.width);
-    my.set((e.clientY - r.top) / r.height);
+  function selectTab(i: number) {
+    if (i === active) return;
+    setActive(i);
+    setCycleKey((k) => k + 1);
   }
-  function onLeave() {
-    mx.set(0.5);
-    my.set(0.5);
-  }
+
+  const current = screens[active];
 
   return (
     <section id="console" className="relative py-24 lg:py-36 overflow-hidden">
@@ -72,109 +105,162 @@ export default function Console() {
           lede="Real-time fleet visibility, multi-channel video review, and behavioural scoring — a unified operational console, deployed in production today."
         />
 
-        {/* === 3-screen 3D bento === */}
+        {/* === Showcase: image canvas (left) + step rail (right) === */}
         <div
-          ref={ref}
-          onMouseMove={onMove}
-          onMouseLeave={onLeave}
-          className="relative perspective-2000"
+          className="grid grid-cols-12 gap-x-6 lg:gap-x-12 gap-y-10"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
-          <motion.div
-            style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
-            className="grid grid-cols-12 gap-4 lg:gap-5 relative preserve-3d"
+          {/* --- Image canvas --- */}
+          <div className="col-span-12 lg:col-span-8 relative">
+            <div className="section-dark relative rounded-2xl overflow-hidden border border-rule2 shadow-soft3">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={current.src}
+                  role="tabpanel"
+                  id={`console-panel-${active}`}
+                  aria-labelledby={`console-tab-${active}`}
+                  initial={{ opacity: 0, scale: reduce ? 1 : 1.012 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: reduce ? 1 : 0.992 }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative w-full aspect-[16/10]"
+                >
+                  <Image
+                    src={current.src}
+                    alt={current.alt}
+                    fill
+                    priority={active === 0}
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                    className="object-contain object-center"
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Hairline auto-advance progress at the bottom edge of the canvas */}
+              {!reduce && !paused && (
+                <motion.div
+                  key={cycleKey}
+                  aria-hidden
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: AUTO_ADVANCE_MS / 1000, ease: "linear" }}
+                  className="absolute bottom-0 left-0 right-0 h-px bg-rd origin-left"
+                />
+              )}
+            </div>
+
+            {/* Step counter floats below the canvas on the left */}
+            <div className="mt-5 flex items-center gap-2.5 font-mono text-[10px] tracking-[0.22em] uppercase text-mute">
+              <span className="tnum text-ink">
+                {String(active + 1).padStart(2, "0")}
+              </span>
+              <span className="block w-8 h-px bg-rule2" />
+              <span className="tnum">
+                {String(screens.length).padStart(2, "0")}
+              </span>
+              <span className="ml-3 text-mute2">rdHub surfaces</span>
+            </div>
+          </div>
+
+          {/* --- Step rail --- */}
+          <div
+            className="col-span-12 lg:col-span-4 lg:pt-2"
+            role="tablist"
+            aria-label="Console surfaces"
           >
-            {/* MAIN DASHBOARD — large left tile */}
-            <motion.div
-              initial={{ opacity: 0, y: 30, rotateY: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-              style={{ transform: "translateZ(20px)" }}
-              className="col-span-12 lg:col-span-8 row-span-2 preserve-3d"
-            >
-              <BrowserScreen
-                src="/console-main.png"
-                alt="rdHub overview — fleet stats and live map"
-                url="rdhub.road-devil.com/admin/dashboard"
-                label="Dashboard"
-                aspect="aspect-[16/9]"
-                priority
-              />
-            </motion.div>
+            <ul className="flex flex-col">
+              {screens.map((s, i) => {
+                const isActive = active === i;
+                return (
+                  <li key={s.code}>
+                    <button
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls={`console-panel-${i}`}
+                      id={`console-tab-${i}`}
+                      onClick={() => selectTab(i)}
+                      className="group relative block w-full text-left py-5 lg:py-6"
+                    >
+                      {/* Left accent rail — red when active, faint rule otherwise */}
+                      <span
+                        aria-hidden
+                        className={`absolute left-0 top-0 bottom-0 w-px transition-colors duration-300 ${
+                          isActive ? "bg-rd" : "bg-rule"
+                        }`}
+                      />
+                      {/* Animated active marker — slightly thicker, scales down when inactive */}
+                      <motion.span
+                        aria-hidden
+                        animate={{
+                          scaleY: isActive ? 1 : 0,
+                          opacity: isActive ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className="absolute left-0 top-0 bottom-0 w-[2px] bg-rd origin-center"
+                      />
 
-            {/* VIDEO REVIEW — top right */}
-            <motion.div
-              initial={{ opacity: 0, y: 30, rotateY: 10 }}
-              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              style={{ transform: "translateZ(10px)" }}
-              className="col-span-12 sm:col-span-6 lg:col-span-4 preserve-3d"
-            >
-              <BrowserScreen
-                src="/console-video.png"
-                alt="Multi-channel video review — main, in-cab and side cameras"
-                url="rdhub / event-review"
-                label="Event Review"
-                aspect="aspect-[16/9]"
-              />
-            </motion.div>
+                      <div className="pl-6">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-baseline gap-3">
+                            <span
+                              className={`font-mono text-[10px] tracking-[0.22em] uppercase transition-colors duration-300 ${
+                                isActive ? "text-rd" : "text-mute"
+                              }`}
+                            >
+                              {s.code}
+                            </span>
+                            <span
+                              className={`display text-[1.05rem] lg:text-[1.15rem] leading-tight transition-colors duration-300 ${
+                                isActive
+                                  ? "text-ink"
+                                  : "text-ink/55 group-hover:text-ink"
+                              }`}
+                            >
+                              {s.label}
+                            </span>
+                          </div>
+                          <motion.span
+                            aria-hidden
+                            animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : -4 }}
+                            transition={{ duration: 0.3 }}
+                            className="text-rd font-mono text-[14px] leading-none"
+                          >
+                            →
+                          </motion.span>
+                        </div>
 
-            {/* DRIVER ANALYTICS — bottom right */}
-            <motion.div
-              initial={{ opacity: 0, y: 30, rotateY: 10 }}
-              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 1, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              style={{ transform: "translateZ(10px)" }}
-              className="col-span-12 sm:col-span-6 lg:col-span-4 preserve-3d"
-            >
-              <BrowserScreen
-                src="/console-driver.png"
-                alt="Live fleet tracking — 3D map view with vehicle markers"
-                url="rdhub / live-map"
-                label="Live Tracking"
-                aspect="aspect-[16/9]"
-              />
-            </motion.div>
-
-            {/* Floating feature chip — top-right of main */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              style={{ transform: "translateZ(60px)" }}
-              className="absolute hidden lg:flex left-[42%] -top-3 glass rounded-full px-3.5 py-1.5 items-center gap-2 z-10"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-rd blink" />
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-ink">
-                Live · 2 vehicles tracked
-              </span>
-            </motion.div>
-
-            {/* Floating chip — bottom-left */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.75, ease: [0.22, 1, 0.36, 1] }}
-              style={{ transform: "translateZ(60px)" }}
-              className="absolute hidden lg:flex bottom-4 left-6 glass rounded-full px-3.5 py-1.5 items-center gap-2 z-10"
-            >
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-rd">
-                ✦ rdADAS
-              </span>
-              <span className="w-px h-3 bg-rule2" />
-              <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-mute">
-                Active
-              </span>
-            </motion.div>
-          </motion.div>
+                        {/* Body copy — collapsible, only the active item shows it */}
+                        <motion.div
+                          initial={false}
+                          animate={{
+                            height: isActive ? "auto" : 0,
+                            opacity: isActive ? 1 : 0,
+                          }}
+                          transition={{
+                            height: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+                            opacity: { duration: 0.3, delay: isActive ? 0.1 : 0 },
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <p className="mt-3 text-[0.92rem] leading-[1.65] text-mute">
+                            {s.body}
+                          </p>
+                        </motion.div>
+                      </div>
+                    </button>
+                    {i < screens.length - 1 && (
+                      <div className="ml-6 h-px bg-rule" aria-hidden />
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
 
         {/* === Feature pills row === */}
-        <div className="mt-14 lg:mt-16 flex flex-wrap items-center justify-center gap-2.5">
+        <div className="mt-16 lg:mt-20 flex flex-wrap items-center justify-center gap-2.5">
           {features.map((f, i) => (
             <motion.div
               key={f.code}
@@ -214,65 +300,5 @@ export default function Console() {
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function BrowserScreen({
-  src,
-  alt,
-  url,
-  label,
-  aspect,
-  priority,
-}: {
-  src: string;
-  alt: string;
-  url: string;
-  label: string;
-  aspect: string;
-  priority?: boolean;
-}) {
-  return (
-    <div className="section-dark relative h-full rounded-2xl overflow-hidden border border-rule2 shadow-soft3 group">
-      {/* Chrome bar */}
-      <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-b from-[#1a1a17] to-[#0e0e0c] border-b border-paper/8">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
-        <div className="flex-1 flex justify-center min-w-0">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-paper/8 max-w-full">
-            <span className="w-1 h-1 rounded-full bg-rd blink" />
-            <span className="font-mono text-[10px] tracking-[0.06em] text-paper/55 truncate">
-              {url}
-            </span>
-          </div>
-        </div>
-        <span className="font-mono text-[9px] tracking-[0.18em] uppercase text-paper/40 hidden md:inline">
-          {label}
-        </span>
-      </div>
-
-      {/* Screenshot — object-contain so any aspect screenshot fits without cropping */}
-      <div className={`relative w-full ${aspect} bg-[#0e0e0c]`}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes="(max-width: 1024px) 100vw, 60vw"
-          className="object-contain object-center transition-transform duration-700 group-hover:scale-[1.015]"
-        />
-
-        {/* Reflective shine */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none opacity-30 mix-blend-overlay"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.15) 100%)",
-          }}
-        />
-      </div>
-    </div>
   );
 }

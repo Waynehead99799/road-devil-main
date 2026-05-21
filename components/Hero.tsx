@@ -98,16 +98,17 @@ export default function Hero() {
             <h1 className="display-xl text-[clamp(2rem,4.4vw,4.2rem)] text-ink mt-7 leading-[1.0]">
               {["A vertically", "integrated", null, "platform."].map((line, i) =>
                 line === null ? (
-                  <span key={i} className="block overflow-hidden">
-                    <motion.span
-                      initial={{ y: "110%" }}
-                      animate={{ y: "0%" }}
-                      transition={{ duration: 0.95, delay: 0.3 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                      className="block display-it text-rd whitespace-nowrap"
-                    >
-                      vehicle intelligence
-                    </motion.span>
-                  </span>
+                  // The italic phrase uses a fade-up reveal instead of overflow-hidden + slide,
+                  // so it can wrap to a second line at narrow column widths without being clipped.
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.95, delay: 0.3 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="block display-it text-rd"
+                  >
+                    vehicle intelligence
+                  </motion.span>
                 ) : (
                   <span key={i} className="block overflow-hidden">
                     <motion.span
