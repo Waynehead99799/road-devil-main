@@ -12,13 +12,16 @@ Only one URL serves content. The "depth" is sectional, not routed.
 - `/` — Road Devil® landing (one-pager)
   - `#hero` — implicit; top of page (no nav link)
   - `#stack` — Three-layer architecture
+  - `#capabilities` — Platform Capabilities (four modules: rdADAS, rdDMS, FNOR/FNOL, Integration Language)
   - `#console` — Live console showcase (rdHub)
   - `#hardware` — Hardware IP & controlled device architecture
   - `#deployment` — Pathways & commercial models
   - `#contact` — Strategic-discussion form (sole conversion surface)
 - `/favicon.png` — icon asset only
 
-> **Change log:** The `#technology` section ("Core value resides in proprietary intelligence and stack architecture") was removed on 2026-05-20. Its narrative function — showing the rdHub dashboard surface — is now carried by `#console`, which already presents the dashboard, multi-channel video review, and live-tracking surfaces with richer composition. The `Technology.tsx` component remains in the codebase but is no longer rendered.
+> **Change log:**
+> - **2026-05-21** — The Platform Capabilities section was restored at `#capabilities`, between Stack and Console, after being collapsed into the (since-removed) Technology section. The four module cards (rdADAS, rdDMS, FNOR/FNOL, Integration Language) are core IP content from the live site and were missing from the build. The dashboard image that previously sat above them is **not** restored — its showcase role is now carried by the new Console showcase. Component lives at `components/PlatformCapabilities.tsx` (renamed from `Technology.tsx`).
+> - **2026-05-20** — The `#technology` section as a dashboard-showcase surface was removed at designer request. The Platform Capabilities 4-card content was inadvertently removed with it; restoration on 2026-05-21 corrects that gap.
 - (out of scope, see brief) — no `/about`, `/blog`, `/news`, `/press`, `/careers`, `/legal`, `/privacy`, `/login`. If they ever appear, they live as separate routes off `/`, never as siblings of the landing.
 
 Sections that exist on the page but are **not** anchored in the nav:
@@ -31,14 +34,15 @@ The deliberate omission of Proof and Strategic from the nav rail is a content-pr
 
 ## Navigation Model
 
-- **Primary navigation**: Fixed top nav, scroll-state aware. Five anchor links, in scroll order:
+- **Primary navigation**: Fixed top nav, scroll-state aware. Six anchor links, in scroll order:
   1. Stack
-  2. Console
-  3. Hardware
-  4. Deployment
-  5. Contact
+  2. Capabilities
+  3. Console
+  4. Hardware
+  5. Deployment
+  6. Contact
 
-  Maximum items: 6. Anything beyond this dilutes the page's "controlled disclosure" rhythm. Technology was removed on 2026-05-20 (see Change log).
+  Maximum items: 6. Anything beyond this dilutes the page's "controlled disclosure" rhythm.
 
 - **Secondary navigation**: None. The page does not subdivide its sections. Within the Stack section, hover/focus on a descriptor card swaps the active 3D tile — this is interaction, not navigation.
 
@@ -60,12 +64,13 @@ The page is one canvas. Order is meaning. Sections were sequenced to walk a scep
 1. **Hero** — *Establish the claim, name the trademark, anchor the primary CTA above the fold.* The 3D truck + sensor callouts demonstrate that the product is real and instrumented; the trademark footnote pre-empts the "is this just a brand?" objection. Both CTAs visible without scroll.
 2. **Proof** — *Four flat statements of difference (full-stack IP, edge AI, integration-ready data, commercial risk alignment).* This is the page's "thirty-second pitch" for the impatient reader. Without proof first, the Stack section reads as decoration.
 3. **Stack** — *The three-layer architecture, made tangible through synchronised 3D tiles and descriptor cards.* This is the structural moat. Outcomes row beneath converts architecture into business-language wins.
-4. **Console** — *Multi-screen rdHub composition: main overview, multi-channel video review, live tracking. Plus feature pill row and stats strip.* This is "what your operations team actually sees" — the dashboard surface a buyer can imagine using. (Absorbed the dashboard-showcase role from the now-removed Technology section.)
-5. **Hardware** — *Reference device + four partner deployment modes (license, manufacture, blueprint, deploy on OEM devices).* Translates IP ownership into commercial flexibility. Comes after the software story so hardware reads as substrate, not the centre of gravity.
-6. **Deployment** — *Three partner pathways (Telematics & Fleet, OEM, Insurance) and four commercial models (Licence, SaaS, API, White-label).* "Here is exactly how we can engage" — the structural answer to a buyer's silent "but how would this even work for us?".
-7. **Strategic** — *Five strategic strengths + a closing paragraph on platform readiness.* The "why this, why now" summary before the ask. The last persuasion surface.
-8. **Contact** — *Single dark section, one form, one CTA: book a strategic discussion.* The exit. All gravity in the page tilts toward this.
-9. **Footer** — *Mark, trademark statement, contact columns.* Closes the document. Not a discovery surface.
+4. **Platform Capabilities** — *Four module cards (rdADAS, rdDMS, FNOR/FNOL, Integration Language) on a 2×2 grid with oversize number watermarks.* Translates the architecture above into named, licensable software modules. Anchors the IP narrative.
+5. **Console** — *Tabbed showcase ("Where operations converge") with three rdHub surfaces — operational overview, multi-channel event review, behavioural analytics — alongside a vertical step rail with auto-advance. Plus feature pill row and stats strip.* This is "what your operations team actually sees" — the dashboard surface a buyer can imagine using.
+6. **Hardware** — *Reference device + four partner deployment modes (license, manufacture, blueprint, deploy on OEM devices).* Translates IP ownership into commercial flexibility. Comes after the software story so hardware reads as substrate, not the centre of gravity.
+7. **Deployment** — *Three partner pathways (Telematics & Fleet, OEM, Insurance) and four commercial models (Licence, SaaS, API, White-label).* "Here is exactly how we can engage" — the structural answer to a buyer's silent "but how would this even work for us?".
+8. **Strategic** — *Five strategic strengths + a closing paragraph on platform readiness.* The "why this, why now" summary before the ask. The last persuasion surface.
+9. **Contact** — *Single dark section, one form, one CTA: book a strategic discussion.* The exit. All gravity in the page tilts toward this.
+10. **Footer** — *Mark, trademark statement, contact columns.* Closes the document. Not a discovery surface.
 
 Below-the-fold content gets visual continuity (consistent section padding, eyebrow + display title + lede rhythm) so scroll feels like one document, not nine.
 

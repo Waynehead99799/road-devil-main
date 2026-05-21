@@ -69,7 +69,7 @@ The codebase already encodes the system. The brief documents it so subsequent ph
 | Hero | Exists | 3D truck stage, mouse parallax, four floating sensor callouts, two CTAs, trademark footnote. |
 | Proof | Exists | Four proof-point cards with icon glyphs, num-chips, hover sweep. |
 | Stack | Exists | Three stacked 3D tiles (L1/L2/L3) with synced descriptor cards; outcomes row beneath. |
-| Technology | Removed 2026-05-20 | Was: scroll-tilted rdHub dashboard image with floating glass labels + four module cards. Removed at designer request — dashboard-showcase role now lives in Console. Component file kept in repo; not rendered. |
+| PlatformCapabilities | Restored 2026-05-21 | Four module cards (rdADAS, rdDMS, FNOR/FNOL, Integration Language) on a 2×2 grid. Lives at `#capabilities` between Stack and Console. The dashboard-image showcase that previously preceded these cards is **not** restored — that role is carried by the new Console showcase. Component renamed `Technology.tsx → PlatformCapabilities.tsx` for clarity. |
 | Console | Exists | Live console showcase with feature list, stats row, multi-channel video framing. |
 | Hardware | Exists | Reference device hero with four partner-mode statements; halo grows on scroll. |
 | Deployment | Exists | Three pathways (staircase entrance) + four commercial models. |

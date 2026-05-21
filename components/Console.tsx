@@ -98,8 +98,7 @@ export default function Console() {
           eyebrow="— rdHub · The Console"
           title={
             <>
-              Production console.{" "}
-              <span className="display-it text-rd">Live</span> now.
+              Where <span className="display-it text-rd">operations</span> converge.
             </>
           }
           lede="Real-time fleet visibility, multi-channel video review, and behavioural scoring — a unified operational console, deployed in production today."

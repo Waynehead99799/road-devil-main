@@ -8,6 +8,7 @@ import ThemeToggle from "./ui/ThemeToggle";
 
 const links = [
   { label: "Stack", href: "#stack" },
+  { label: "Capabilities", href: "#capabilities" },
   { label: "Console", href: "#console" },
   { label: "Hardware", href: "#hardware" },
   { label: "Deployment", href: "#deployment" },
