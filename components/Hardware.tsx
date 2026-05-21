@@ -240,7 +240,11 @@ export default function Hardware() {
           className="mt-14 flex justify-center"
         >
           <Magnetic strength={0.25}>
-            <a href="#contact" className="btn btn-ghost">
+            <a
+              href="/Road_Devil_Data_Sheet_v4-1.pdf"
+              download
+              className="btn btn-ghost"
+            >
               Download reference device — technical data sheet
               <span aria-hidden>↓</span>
             </a>

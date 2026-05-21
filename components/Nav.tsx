@@ -35,24 +35,45 @@ export default function Nav() {
       }`}
     >
       <div className="max-w-page mx-auto px-6 lg:px-10">
-        <div className="flex items-center justify-between h-[68px]">
+        <div className="flex items-center justify-between h-[80px] lg:h-[88px]">
           <motion.a
             href="#"
-            className="flex items-center gap-3 group"
+            aria-label="Road Devil — home"
+            className="flex items-center group"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.div
-              whileHover={{ rotate: -8, scale: 1.05 }}
+              whileHover={{ scale: 1.04 }}
               transition={{ type: "spring", stiffness: 300, damping: 18 }}
               className="relative"
             >
-              <Image src="/rd-mark.png" alt="Road Devil" width={32} height={32} priority />
+              <Image
+                src="/RD-logo-main.png"
+                alt="Road Devil"
+                width={600}
+                height={216}
+                priority
+                className="h-14 lg:h-16 w-auto select-none mix-blend-multiply dark:hidden"
+              />
+              {/* Dark-mode fallback: the PNG's white background can't be blended away
+                  on a near-black canvas. Until a transparent re-export is provided, use
+                  the small mark + wordmark text in dark mode. */}
+              <span className="hidden dark:flex items-center gap-3">
+                <Image
+                  src="/rd-mark.png"
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="h-9 w-9"
+                  aria-hidden
+                />
+                <span className="font-sans font-bold text-[14px] tracking-tight text-ink uppercase whitespace-nowrap">
+                  Road Devil<span className="text-rd">®</span>
+                </span>
+              </span>
             </motion.div>
-            <span className="hidden sm:inline font-sans font-bold text-[14px] tracking-tight text-ink uppercase">
-              Road Devil<span className="text-rd">®</span>
-            </span>
           </motion.a>
 
           <motion.nav

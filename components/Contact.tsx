@@ -80,41 +80,22 @@ export default function Contact() {
           >
             <span className="eyebrow !text-paper/50">— Engagement</span>
             <h2 className="display-xl text-[clamp(2.2rem,5vw,4.4rem)] text-paper mt-5 leading-[1.0]">
-              {["Request a", null, "discussion."].map((line, i) =>
-                line === null ? (
-                  <span key={i} className="block overflow-hidden">
-                    <motion.span
-                      initial={{ y: "110%" }}
-                      whileInView={{ y: "0%" }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 1,
-                        delay: 0.2 + i * 0.1,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="block display-it text-rd"
-                    >
-                      strategic
-                    </motion.span>
-                  </span>
-                ) : (
-                  <span key={i} className="block overflow-hidden">
-                    <motion.span
-                      initial={{ y: "110%" }}
-                      whileInView={{ y: "0%" }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 1,
-                        delay: 0.1 + i * 0.1,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="block"
-                    >
-                      {line}
-                    </motion.span>
-                  </span>
-                )
-              )}
+              {["Request a", null, "discussion."].map((line, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{
+                    duration: 0.85,
+                    delay: 0.1 + i * 0.1,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className={`block ${line === null ? "display-it text-rd" : ""}`}
+                >
+                  {line === null ? "strategic" : line}
+                </motion.span>
+              ))}
             </h2>
 
             <motion.p

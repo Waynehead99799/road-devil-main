@@ -165,7 +165,7 @@ html.theme-ready * {
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+html { scroll-behavior: smooth; scroll-padding-top: 104px; }
 
 html, body {
   background: var(--paper);

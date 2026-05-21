@@ -147,9 +147,13 @@ export default function Hero() {
                 </a>
               </Magnetic>
               <Magnetic strength={0.25}>
-                <a href="#hardware" className="btn btn-ghost">
-                  See hardware
-                  <span className="arrow" aria-hidden>→</span>
+                <a
+                  href="/Road_Devil_Data_Sheet_v4-1.pdf"
+                  download
+                  className="btn btn-ghost"
+                >
+                  Download the brochure
+                  <span aria-hidden>↓</span>
                 </a>
               </Magnetic>
             </motion.div>

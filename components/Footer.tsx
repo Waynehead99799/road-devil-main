@@ -30,21 +30,23 @@ export default function Footer() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="col-span-12 lg:col-span-6"
           >
+            {/* Footer is always dark — using the small mark + wordmark text here until a
+                transparent-background re-export of RD-logo-main.png is available. */}
             <div className="flex items-center gap-3">
               <motion.div
-                whileHover={{ rotate: -8, scale: 1.05 }}
+                whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300, damping: 18 }}
               >
                 <Image
                   src="/rd-mark.png"
                   alt=""
-                  width={36}
-                  height={36}
+                  width={40}
+                  height={40}
                   className="brightness-110"
                   aria-hidden
                 />
               </motion.div>
-              <span className="font-bold text-[17px] tracking-tight uppercase">
+              <span className="font-bold text-[18px] tracking-tight uppercase">
                 Road Devil<span className="text-rd">®</span>
               </span>
             </div>
@@ -68,7 +70,8 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 ["Stack", "#stack"],
-                ["Technology", "#technology"],
+                ["Capabilities", "#capabilities"],
+                ["Console", "#console"],
                 ["Hardware", "#hardware"],
                 ["Deployment", "#deployment"],
                 ["Contact", "#contact"],
